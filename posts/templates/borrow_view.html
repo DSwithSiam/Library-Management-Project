@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+Borrow list View
+{% endblock title %}
+
+
+
+
+{% block content %} 
+<table class="table">
+    <thead>
+      <tr>
+        <th scope="col">NO</th>
+        <th scope="col">Book Name</th>
+        <th scope="col">Price</th>
+        <th scope="col">Balance</th>
+        <th scope="col">Date</th>
+        <th scope="col">Return Book</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for dt in data %}
+        <tr>
+          <th scope="row">{{ forloop.counter }}</th>
+          <td>{{dt.tittle}}</td>
+          <td>{{dt.price}}</td>
+          <td>{{dt.balance}}</td>
+          <td>{{dt.date}}</td>
+          <td><a class="btn" href="">Pay</a></td>
+          
+        </tr>
+      {% endfor  %}
+    </tbody>
+  </table>
+{% endblock %}

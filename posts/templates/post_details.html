@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+Post View
+{% endblock title %}
+
+
+
+
+{% block content %} 
+<div class="row mt-5">
+  <div class="col-5 justify-content-center align-items-center d-flex">
+    <img class="p-1  m-auto" style="width: 90%; height: 100%" src="{{post.image.url}}" alt="">
+  </div>
+  <div class="col-7 ">
+      <div class="">
+        <div class="">
+          <h1 class=""> {{ post.title }} </h1>
+          <small><b>Author: </b>{{ post.author.first_name }} {{ post.author.last_name }}</small><br>
+          <h4 class="bg-secondary text-white d-inline px-2 rounded-1 ">Borrowing price: {{ post.price }}</h4><br>
+          <small class=""> {{ post.content }}</small><br><br>
+          <a href="{% url 'borrow' post.id %}" class="btn btn-primary" >Borrow</a>
+        </div>
+      </div>
+    </div>
+</div>
+
+  <div>
+    {% if rev %}
+    <div>
+      <form method="post" class="col-10 col-md-5 m-auto my-5">
+          {% csrf_token %}
+          <h1>Post review:</h1>
+          {{ comment_form | crispy }}
+          <button class="btn btn-primary" type="submit">Submit</button>
+      </form>
+  </div>
+    {% endif %}
+
+    <h2 class="m-5">Total review: {{ comments | length }}</h2>
+    <div class="row m-auto">
+        {% for cmt in comments %}
+        <div class="col-12 col-md-5 pt-5 ps-5">
+            <div class="card p-2">
+                <h5 class="card-header">{{cmt.name}}</h5>
+                <div class="card-body">
+                  <p class="card-text">{{cmt.body}}</p>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+    </div>
+
+  </div>
+{% endblock %}

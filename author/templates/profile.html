@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+
+{% block title %}
+{{ type }}
+{% endblock title %}
+
+
+
+
+{% block content %} 
+
+<div class="m-5">
+    <h1>{{user_data.first_name}} {{user_data.last_name}}</h1>
+    <h4>@{{user_data.username}}</h4>
+    <a class="btn btn-primary" href="{% url 'edit_profile' %}">Edit Profile</a>
+    <a class="btn btn-primary" href="{% url 'password_change' %}">Change Password</a>
+</div>
+
+<div class="d-flex flex-wrap justify-content-center gap-3 mt-5 ">
+    {% if data %} 
+    <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">NO</th>
+            <th scope="col">Book Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Balance</th>
+            <th scope="col">Date</th>
+            <th scope="col">Return Book</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for dt in data %}
+            <tr>
+              <th scope="row">{{ forloop.counter }}</th>
+              <td>{{dt.book_name}}</td>
+              <td>{{dt.book_price}}</td>
+              <td>{{dt.balance}}</td>
+              <td>{{dt.date}}</td>
+              <td><a class="btn" href="{% url 'return_book' dt.id %}">Pay</a></td>
+              
+            </tr>
+          {% endfor  %}
+        </tbody>
+      </table>
+    {% else %} 
+        No Data 
+    {% endif %}
+</div>
+{% endblock %}
