@@ -16,26 +16,22 @@ Home
 </div> {% endcomment %}
 <div>
     <div class="d-flex flex-wrap mt-4 px-2">
-        <div class="col-12 col-md-2 bg-white ">
+        <div class="col-12 col-md-2">
             <div class="p-3 ">
+                <h4>Book Category</h4>
                 {% for ct in category %}
-                <div class="form-check">
-                    <input
-                        class="form-check-input"
-                        type="radio"
-                        name="categorie"
-                        id="{{ct.id}}"
-                        checked
-                    >
-                    <label class="form-check-label" for="{{ct.id}}">
-                        <a href="{% url 'category_post' ct.slug %}">{{ ct.name }}</a>
+                <div class="">
+                   
+                        <a class="btn mt-2 btn-light d-block btn-outline-primary" href="{% url 'category_post' ct.slug %}">{{ ct.name }}</a>
                     </label>
                 </div>
                 {% endfor %}
+                
+                <h4 class="mt-5">{{ data | length }} result found</h4>
             </div>
         </div>
         <div class="col-12 col-md-10 px-3 py-3">
-            <h4>{{ data | length }} result found</h4>
+            
             <div class="d-flex flex-wrap gap-3 mt-3 ">
                 {% if data %} 
             {% for post in data %}
