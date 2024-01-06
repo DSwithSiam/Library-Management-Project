@@ -29,46 +29,49 @@ class DetailsPostView(DetailView):
         post = self.object # post model er object ekhane store korlam 
         comments = post.comment.all()
         comment_form = CommentForm()
-        borrow = BorrowingDataModel.objects.filter(user = self.request.user, post=post)
-        print(borrow)
-        print(post)
+        if self.request.user.is_authenticated:
+            borrow = BorrowingDataModel.objects.filter(user = self.request.user, post=post)
+            context['rev'] = borrow
+        
         context['comments'] = comments
         context['comment_form'] = comment_form
-        context['rev'] = borrow
         return context
     
 def BorrowPost(request, id):
     try:
-        acc = UserAccount.objects.get(user=request.user)
-        post = Post.objects.get(id=id)
+        if request.user.is_authenticated:
+            acc = UserAccount.objects.get(user=request.user)
+            post = Post.objects.get(id=id)
 
-        if acc.balance >= post.price:
-            acc.balance -= post.price
-            acc.save()
+            if acc.balance >= post.price:
+                acc.balance -= post.price
+                acc.save()
 
-            add_data = BorrowingDataModel.objects.create(
-                book_name=post.title,
-                book_price=post.price,
-                balance=acc.balance,
-                user=request.user,
-                post=post
-            )
-            add_data.save()
+                add_data = BorrowingDataModel.objects.create(
+                    book_name=post.title,
+                    book_price=post.price,
+                    balance=acc.balance,
+                    user=request.user,
+                    post=post
+                )
+                add_data.save()
 
-            messages.success(
-                request,
-                'Borrowing successfully'
-            )
+                messages.success(
+                    request,
+                    'Borrowing successfully'
+                )
 
-            mail_subject = 'Borrowing successfully'
-            to_email = request.user.email
-            ConfarmationEmail(request.user, to_email, "Borrowing", mail_subject, 0, 'borrow_email.html')
-            
+                mail_subject = 'Borrowing successfully'
+                to_email = request.user.email
+                ConfarmationEmail(request.user, to_email, "Borrowing", mail_subject, 0, 'borrow_email.html')
+                
+            else:
+                messages.error(
+                    request,
+                    "Your account doesn't have enough money."
+                )
         else:
-            messages.error(
-                request,
-                "Your account doesn't have enough money."
-            )
+            return redirect('login')
 
     except (UserAccount.DoesNotExist, Post.DoesNotExist):
         messages.error(
